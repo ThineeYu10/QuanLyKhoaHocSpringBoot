@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quản lý khóa học</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="/courses">CourseManager</a>
+        <span class="navbar-text text-white">Mini Project Spring Boot</span>
+    </div>
+</nav>
+<main class="container py-5">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <h1 class="h2 mb-1">Quản lý khóa học</h1>
+            <p class="text-secondary mb-0">Thêm, xem, sửa, xóa và tìm kiếm khóa học.</p>
+        </div>
+        <a class="btn btn-primary" href="/courses/new">+ Thêm khóa học</a>
+    </div>
+
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+    <form class="row g-2 mb-3" method="get" action="/courses">
+        <div class="col-sm-8 col-md-6">
+            <input class="form-control" type="search" name="keyword" th:value="${keyword}"
+                   placeholder="Tìm theo tên khóa học hoặc giảng viên...">
+        </div>
+        <div class="col-auto"><button class="btn btn-outline-primary" type="submit">Tìm kiếm</button></div>
+        <div class="col-auto"><a class="btn btn-outline-secondary" href="/courses">Đặt lại</a></div>
+    </form>
+
+    <div class="card border-0 shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                <tr>
+                    <th>Mã</th><th>Tên khóa học</th><th>Giảng viên</th><th>Danh mục</th>
+                    <th>Học phí</th><th>Thời lượng</th><th class="text-end">Thao tác</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="course : ${courses}">
+                    <td th:text="${course.id}"></td>
+                    <td class="fw-semibold" th:text="${course.name}"></td>
+                    <td th:text="${course.instructor}"></td>
+                    <td><span class="badge text-bg-light" th:text="${course.category}"></span></td>
+                    <td th:text="${#numbers.formatDecimal(course.price, 0, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+                    <td th:text="${course.durationHours} + ' giờ'"></td>
+                    <td class="text-end text-nowrap">
+                        <a class="btn btn-sm btn-outline-info" th:href="@{/courses/{id}(id=${course.id})}">Xem</a>
+                        <a class="btn btn-sm btn-outline-primary" th:href="@{/courses/{id}/edit(id=${course.id})}">Sửa</a>
+                        <form class="d-inline" method="post" th:action="@{/courses/{id}/delete(id=${course.id})}"
+                              onsubmit="return confirm('Bạn chắc chắn muốn xóa khóa học này?');">
+                            <button class="btn btn-sm btn-outline-danger" type="submit">Xóa</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(courses)}">
+                    <td colspan="7" class="text-center text-secondary py-5">Chưa có khóa học nào. Hãy thêm khóa học đầu tiên!</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <p class="text-secondary small mt-3 mb-0">Tổng số khóa học đang hiển thị: <span th:text="${#lists.size(courses)}"></span></p>
+</main>
+</body>
+</html>

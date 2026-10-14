@@ -1,0 +1,7 @@
+body { background: #f5f7fb; color: #202938; }
+.navbar-brand { letter-spacing: .3px; }
+.card { border-radius: 14px; }
+.btn { border-radius: 8px; }
+.form-control, .form-select { padding: .65rem .8rem; border-radius: 8px; }
+.table th { white-space: nowrap; font-size: .9rem; }
+.table td { vertical-align: middle; }
